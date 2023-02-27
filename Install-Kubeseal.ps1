@@ -1,10 +1,10 @@
-# Create the "C:\bin\kubeseal" directory if it doesn't exist
-Write-Host "Creating the 'C:\bin\kubeseal' directory if it doesn't exist..."
-New-Item -ItemType Directory -Path "C:\bin\kubeseal" -ErrorAction Ignore
+# Create the "C:\applications\kubeseal" directory if it doesn't exist
+Write-Host "Creating the 'C:\applications\kubeseal' directory if it doesn't exist..."
+New-Item -ItemType Directory -Path "C:\applications\kubeseal" -ErrorAction Ignore
 
 # Get the latest release information from the GitHub API
 Write-Host "Retrieving the latest release information from the GitHub API..."
-$releaseInfo = Invoke-WebRequest -Uri https://api.github.com/repos/bitnami-labs/sealed-secrets/releases/latest
+$releaseInfo = Invoke-WebRequest -Uri https://api.github.com/repos/bitnami-labs/sealed-secrets/releases/latest -UseBasicParsing
 
 # Extract the download URL for the Windows kubeseal binary
 Write-Host "Extracting the download URL for the Windows kubeseal binary..."
@@ -13,15 +13,15 @@ $downloadUrl = ($releaseInfo | ConvertFrom-Json).assets | Where-Object { $_.name
 # Download the kubeseal binary
 Write-Host "Downloading the kubeseal binary..."
 $tempFile = [System.IO.Path]::GetTempFileName()
-Invoke-WebRequest -Uri $downloadUrl -OutFile $tempFile
+Invoke-WebRequest -Uri $downloadUrl -OutFile $tempFile -UseBasicParsing
 
 # Uncompress the .tar.gz file
 Write-Host "Uncompressing the .tar.gz file..."
-Invoke-Expression "tar -xvzf $tempFile -C C:\bin\kubeseal"
+Invoke-Expression "tar -xvzf $tempFile -C C:\applications\kubeseal"
 
-# Add the "C:\bin\kubeseal" directory to the PATH environment variable
-Write-Host "Adding the 'C:\bin\kubeseal' directory to the PATH environment variable..."
-[System.Environment]::SetEnvironmentVariable("PATH", "$env:PATH;C:\bin\kubeseal", "User")
+# Add the "C:\applications\kubeseal" directory to the PATH environment variable
+Write-Host "Adding the 'C:\applications\kubeseal' directory to the PATH environment variable..."
+[System.Environment]::SetEnvironmentVariable("PATH", "$env:PATH;C:\applications\kubeseal", "User")
 
 # Refresh the PATH
 Write-Host "Refreshing the PATH..."
